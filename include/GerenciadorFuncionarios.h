@@ -23,7 +23,7 @@ private:
 
 	void exibirFuncionariosEncontrados( const std::vector<int>& indicesFuncionarios );
 	int selecionarFuncionarioListado( const std::vector<int>& indicesFuncionarios );
-	void exibirDadosEConfirmarAcao( const std::vector<int>& indicesFuncionarios );
+	void removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios );
 
 public:
 	void cadastrarNovosFuncionarios( const int quantidadeFuncionarios );

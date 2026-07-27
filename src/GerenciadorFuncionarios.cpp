@@ -158,7 +158,11 @@ int GerenciadorFuncionarios::selecionarFuncionarioListado( const std::vector<int
 
     int numeroFuncionarioNaLista;
     std::cout << "Escolha o funcionário: ";
-    std::cin >> numeroFuncionarioNaLista;
+    if(!(std::cin >> numeroFuncionarioNaLista))
+    {
+        interfaceFuncionario.exibirMensagemErro("APENAS NÚMEROS SÃO PERMITIDOS!");
+        return 0;
+    }
 
     entradaUsuario.limparBuffer();
 
@@ -174,7 +178,7 @@ int GerenciadorFuncionarios::selecionarFuncionarioListado( const std::vector<int
     }
 }
 
-void GerenciadorFuncionarios::exibirDadosEConfirmarAcao( const std::vector<int>& indicesFuncionarios )
+void GerenciadorFuncionarios::removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios )
 {
     if( indicesFuncionarios.size() == 1 )
     {
@@ -242,9 +246,10 @@ void GerenciadorFuncionarios::removerFuncionarioPorNome()
     if( indicesFuncionarios.empty() )
     {
         interfaceFuncionario.exibirMensagemErro( "Funcionário não encontrado!" );
+        return;
     }
 
-    exibirDadosEConfirmarAcao( indicesFuncionarios );
+    removerFuncionarioPeloIndice( indicesFuncionarios );
 
     if( indicesFuncionarios.size() > 1 )
     {
