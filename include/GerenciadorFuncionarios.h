@@ -21,9 +21,12 @@ private:
 	std::vector<int> encontrarIndiceFuncionarioPorNomeDigitado( const std::string& nomeBuscado );
 	std::vector<int> buscarIndicePorNomeDigitado();
 
-	void exibirFuncionariosEncontrados( const std::vector<int>& indicesFuncionarios );
 	int selecionarFuncionarioListado( const std::vector<int>& indicesFuncionarios );
+
+	void exibirFuncionariosEncontrados( const std::vector<int>& indicesFuncionarios );
+
 	void removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios );
+	void editarFuncionarioPeloIndice( const std::vector<int>& indicesFuncinarios );
 
 public:
 	void cadastrarNovosFuncionarios( const int quantidadeFuncionarios );

@@ -161,7 +161,8 @@ int GerenciadorFuncionarios::selecionarFuncionarioListado( const std::vector<int
     if(!(std::cin >> numeroFuncionarioNaLista))
     {
         interfaceFuncionario.exibirMensagemErro("APENAS NÚMEROS SÃO PERMITIDOS!");
-        return 0;
+        entradaUsuario.limparBuffer();
+        return -1;
     }
 
     entradaUsuario.limparBuffer();
@@ -175,28 +176,6 @@ int GerenciadorFuncionarios::selecionarFuncionarioListado( const std::vector<int
     else
     {
         return -1;
-    }
-}
-
-void GerenciadorFuncionarios::removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios )
-{
-    if( indicesFuncionarios.size() == 1 )
-    {
-        interfaceFuncionario.exibirTitulo( "          FUNCIONÁRIO ENCONTRADO          " );
-        cadastroFuncionario.exibirDadosFuncionario( funcionariosCadastrados[ indicesFuncionarios[0] ] );
-
-        if( confirmarAcao( "Deseja remover este funcionário? (s/n): " ) )
-        {
-            std::string nomeUsuarioRemovido = funcionariosCadastrados[indicesFuncionarios[0]].nome;
-
-            funcionariosCadastrados.erase( funcionariosCadastrados.begin() + indicesFuncionarios[0] );
-            interfaceFuncionario.exibirMensagemSucesso( nomeUsuarioRemovido + " foi removido com sucesso." );
-        }
-        else
-        {
-            std::string nomeUsuarioRemovido = funcionariosCadastrados[indicesFuncionarios[0]].nome;
-            interfaceFuncionario.exibirMensagemSucesso( nomeUsuarioRemovido + " não foi removido por opção do usuário." );
-        }
     }
 }
 
@@ -234,6 +213,28 @@ void GerenciadorFuncionarios::buscarFuncionarioPorNome()
     }
 }
 
+void GerenciadorFuncionarios::removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios )
+{
+    if( indicesFuncionarios.size() == 1 )
+    {
+        interfaceFuncionario.exibirTitulo( "          FUNCIONÁRIO ENCONTRADO          " );
+        cadastroFuncionario.exibirDadosFuncionario( funcionariosCadastrados[ indicesFuncionarios[0] ] );
+
+        if( confirmarAcao( "Deseja remover este funcionário? (s/n): " ) )
+        {
+            std::string nomeUsuarioRemovido = funcionariosCadastrados[indicesFuncionarios[0]].nome;
+
+            funcionariosCadastrados.erase( funcionariosCadastrados.begin() + indicesFuncionarios[0] );
+            interfaceFuncionario.exibirMensagemSucesso( nomeUsuarioRemovido + " foi removido com sucesso." );
+        }
+        else
+        {
+            std::string nomeUsuarioRemovido = funcionariosCadastrados[indicesFuncionarios[0]].nome;
+            interfaceFuncionario.exibirMensagemSucesso( nomeUsuarioRemovido + " não foi removido por opção do usuário." );
+        }
+    }
+}
+
 void GerenciadorFuncionarios::removerFuncionarioPorNome()
 {
     if( cadastroEstaVazio( ) )
@@ -246,7 +247,6 @@ void GerenciadorFuncionarios::removerFuncionarioPorNome()
     if( indicesFuncionarios.empty() )
     {
         interfaceFuncionario.exibirMensagemErro( "Funcionário não encontrado!" );
-        return;
     }
 
     removerFuncionarioPeloIndice( indicesFuncionarios );
@@ -281,6 +281,36 @@ void GerenciadorFuncionarios::removerFuncionarioPorNome()
     }
 }
 
+void GerenciadorFuncionarios::editarFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios )
+{
+if( indicesFuncionarios.size() == 1 )
+    {
+        interfaceFuncionario.exibirTitulo( "          FUNCIONÁRIO ENCONTRADO          " );
+
+        Funcionario funcionarioTemporario = funcionariosCadastrados[indicesFuncionarios[0]];
+        cadastroFuncionario.exibirDadosFuncionario( funcionarioTemporario );
+
+        if( confirmarAcao( "Deseja editar este funcionário? (s/n): " ) )
+        {
+            cadastroFuncionario.lerDadosFuncionario( funcionarioTemporario );
+
+            if( cadastroFuncionario.validarDadosFuncionario( funcionarioTemporario ) )
+            {
+                funcionariosCadastrados[indicesFuncionarios[0]] = funcionarioTemporario;
+                interfaceFuncionario.exibirMensagemSucesso( funcionariosCadastrados[indicesFuncionarios[0]].nome + " editado com sucesso." );
+            }
+            else
+            {
+                interfaceFuncionario.exibirMensagemErro( "Edição cancelada." );
+            }
+        }
+        else
+        {
+            interfaceFuncionario.exibirMensagemSucesso( "Edição cancelada por opção do usuário." );
+        }
+    }
+}
+
 void GerenciadorFuncionarios::editarFuncionarioPorNome()
 {
     if( cadastroEstaVazio() )
@@ -294,30 +324,41 @@ void GerenciadorFuncionarios::editarFuncionarioPorNome()
     {
         interfaceFuncionario.exibirMensagemErro( "Nenhum funcionário encontrado." );
     }
-    else
+
+    editarFuncionarioPeloIndice( indiceFuncionario );
+
+    if( indiceFuncionario.size() > 1 )
     {
         interfaceFuncionario.exibirTitulo( "          FUNCIONÁRIO ENCONTRADO          " );
+        int indiceFuncionarioEscolhido = selecionarFuncionarioListado( indiceFuncionario );
 
-        Funcionario funcionarioTemporario = funcionariosCadastrados[indiceFuncionario[0]];
-        cadastroFuncionario.exibirDadosFuncionario( funcionarioTemporario );
-
-        if( confirmarAcao( "Deseja editar este funcionário? (s/n): " ) )
+        if( indiceFuncionarioEscolhido == -1)
         {
-            cadastroFuncionario.lerDadosFuncionario( funcionarioTemporario );
-
-            if( cadastroFuncionario.validarDadosFuncionario( funcionarioTemporario ) )
-            {
-                funcionariosCadastrados[indiceFuncionario[0]] = funcionarioTemporario;
-                interfaceFuncionario.exibirMensagemSucesso( funcionariosCadastrados[indiceFuncionario[0]].nome + " editado com sucesso." );
-            }
-            else
-            {
-                interfaceFuncionario.exibirMensagemErro( "Edição cancelada." );
-            }
+            interfaceFuncionario.exibirMensagemErro( "Opção inválida." );
         }
         else
         {
-            interfaceFuncionario.exibirMensagemSucesso( "Edição cancelada por opção do usuário." );
+            Funcionario funcionarioTemporario = funcionariosCadastrados[indiceFuncionario[indiceFuncionarioEscolhido]];
+            cadastroFuncionario.exibirDadosFuncionario( funcionarioTemporario );
+
+            if( confirmarAcao( "Deseja editar este funcionário? (s/n): " ) )
+            {
+                cadastroFuncionario.lerDadosFuncionario( funcionarioTemporario );
+
+                if( cadastroFuncionario.validarDadosFuncionario( funcionarioTemporario ) )
+                {
+                    funcionariosCadastrados[indiceFuncionario[indiceFuncionarioEscolhido]] = funcionarioTemporario;
+                    interfaceFuncionario.exibirMensagemSucesso( funcionariosCadastrados[indiceFuncionario[indiceFuncionarioEscolhido]].nome + " editado com sucesso." );
+                }
+                else
+                {
+                    interfaceFuncionario.exibirMensagemErro( "Edição cancelada." );
+                }
+            }
+            else
+            {
+                interfaceFuncionario.exibirMensagemSucesso( "Edição cancelada por opção do usuário." );
+            }
         }
     }
 }
