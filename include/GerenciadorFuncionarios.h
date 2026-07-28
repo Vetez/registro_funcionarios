@@ -25,8 +25,7 @@ private:
 
 	void exibirFuncionariosEncontrados( const std::vector<int>& indicesFuncionarios );
 
-	void removerFuncionarioPeloIndice( const std::vector<int>& indicesFuncionarios );
-	void editarFuncionarioPeloIndice( const std::vector<int>& indicesFuncinarios );
+	int obterIndiceFuncionarioPorBusca();
 
 public:
 	void cadastrarNovosFuncionarios( const int quantidadeFuncionarios );
