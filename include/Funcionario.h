@@ -5,6 +5,7 @@
 
 struct Funcionario
 {
+    int id_funcionario;
     std::string nome;
     int idade;
     double salario;

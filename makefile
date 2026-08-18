@@ -2,8 +2,10 @@
 CXX = g++
 
 # Flags de compilação
-CXXFLAGS = -Wall -Wextra -g -Iinclude
-LDFLAGS = -lm -lncurses# Adicione outras bibliotecas necessárias aqui
+CXXFLAGS = -Wall -Wextra -g -std=c++17 -Iinclude $(shell pkg-config --cflags libpq)
+
+# Bibliotecas
+LDLIBS = -lm -lncurses $(shell pkg-config --libs libpq)
 
 # Diretórios
 SRC_DIR = src
@@ -20,34 +22,34 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp)
 # Arquivos-objeto gerados
 OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
-# Regra principal (default): compilar o executável
+# Regra principal
 all: $(TARGET)
 	@echo "Build completo!"
 	@echo "Executável gerado em: $(TARGET)"
 
-# Compilar o executável
+# Gerar executável
 $(TARGET): $(OBJ)
-	@mkdir -p $(@D)  # Cria o diretório se não existir
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
-	chmod +x $@  # Garante permissão de execução
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDLIBS)
+	chmod +x $@
 	@echo "Executável criado com sucesso"
 
-# Compilar os arquivos .cpp para .o
+# Compilar .cpp para .o
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Limpar arquivos compilados
+# Limpar
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR)
 	@echo "Limpeza concluída."
 
-# Regra de depuração (com símbolos de debug)
+# Debug
 debug: CXXFLAGS += -DDEBUG -Og
 debug: clean all
 	@echo "Compilação para Debug concluída."
 
-# Executar o programa
+# Executar
 run: all
 	@echo "Executando o programa..."
 	./$(TARGET)
@@ -57,7 +59,7 @@ gdb: debug
 	@echo "Iniciando debug com GDB..."
 	gdb --args $(TARGET)
 
-# Verificar estrutura de arquivos
+# Verificar estrutura
 check:
 	@echo "Verificando estrutura de arquivos..."
 	@tree -L 2
